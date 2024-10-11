@@ -6,13 +6,14 @@ import keyboard
 import sys
 import time
 
+print("别用我fork的，我改不动")
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 not_found_count = 0
 last_not_found_time = 0
 
 def capture_area():
-    region = (60, 260, 360, 320)  # (x, y, width, height) 坐标是由上到下，由左到右的;此坐标是识别区域坐标 左上:(60,260) 右下:(360,320)
+    region = (60, 260, 360, 320)
     screenshot = pyautogui.screenshot(region=region)
     return np.array(screenshot)
 
@@ -37,7 +38,6 @@ def draw_comparison(numbers):
         
         last_not_found_time = current_time
         print("未找到足够的数字进行比较")
-        
         if not_found_count >= 10:
 
             pyautogui.click(218, 651) # 此坐标是“开心收下”按钮的坐标
@@ -46,14 +46,13 @@ def draw_comparison(numbers):
             time.sleep(0.3)
             pyautogui.click(219, 844) # 此坐标是“继续PK”按钮的坐标
             time.sleep(13)
-            
             print("准备重新开始程序...")
-            time.sleep(1)
+            time.sleep(0.5)
             main()
         return
 
     first, second = numbers[0], numbers[1]
-    origin_x, origin_y = 250, 650  # 此坐标是绘制区域是坐标
+    origin_x, origin_y = 250, 650 
     size = 50
 
     if first > second:
@@ -62,14 +61,11 @@ def draw_comparison(numbers):
     elif first < second:
         print(f"{first} < {second}")
         draw_less_than(origin_x, origin_y, size)
-
     not_found_count = 0  
-
 def draw_greater_than(origin_x, origin_y, size):
     pyautogui.moveTo(origin_x, origin_y)
     pyautogui.dragRel(size, size, duration=0.05)
     pyautogui.dragRel(-size, size, duration=0.05)
-
 def draw_less_than(origin_x, origin_y, size):
     pyautogui.moveTo(origin_x + size, origin_y)
     pyautogui.dragRel(-size, size, duration=0.05)
@@ -83,7 +79,7 @@ def main():
             image = capture_area()
             numbers = recognize_numbers(image)
             draw_comparison(numbers)
-            time.sleep(0.3) # 每次绘画及识别的延迟
+            time.sleep(0.05)
     except SystemExit as e:
         print(e)
 
